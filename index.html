@@ -103,6 +103,7 @@
                 <p class="text-slate-500 text-sm font-bold tracking-widest uppercase">Memuat Data...</p>
             </div>
 
+            <!-- Form Utama -->
             <form id="dynamicForm" class="hidden">
                 <div class="flex items-center gap-3 mb-8 pb-4 border-b border-slate-100">
                     <div class="w-2 h-8 bg-indigo-600 rounded-full"></div>
@@ -122,7 +123,7 @@
                         <span id="btnText">KIRIM SEKARANG</span>
                         <div id="btnLoader" class="loader ease-linear rounded-full border-2 border-t-2 border-white h-5 w-5 ml-3 hidden"></div>
                     </button>
-                    <p class="mt-4 text-[10px] text-slate-400 font-bold uppercase tracking-widest">Keamanan data Anda terjaga secara otomatis</p>
+                    <p class="mt-4 text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center">Keamanan data Anda terjaga secara otomatis</p>
                 </div>
             </form>
 
@@ -139,17 +140,21 @@
         </div>
     </div>
 
+    <!-- Iframe tersembunyi untuk proses submit tanpa CORS error -->
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) { showSuccess(); }"></iframe>
+
     <script>
-        // GANTI INI DENGAN URL /exec DARI GOOGLE APPS SCRIPT ANDA
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOZkzjWh1BUIsy7IvGTavkL1eVsqMctTfFccdoQv1YxhrmqPfdvN0uuJxOG5kKl9GD0A/exec"; 
+        // URL SCRIPT TERUPDATE ANDA
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygaraLc4E3PVs61WgrwXEDoHJ10gYOQ1RIyVUZPCFRsVuKCX2ihmIzNTjsdeJxpT3ZZA/exec"; 
         
         let formFieldsData = [];
+        let submitted = false;
 
         window.onload = () => {
             if (SCRIPT_URL && SCRIPT_URL.includes("exec")) {
                 loadFormStructure();
             } else {
-                showError("URL Script belum dikonfigurasi. Masukkan URL /exec Anda di dalam kode.");
+                showError("URL Script belum dikonfigurasi.");
                 document.getElementById('loadingState').classList.add('hidden');
             }
         };
@@ -157,12 +162,11 @@
         async function loadFormStructure() {
             try {
                 const response = await fetch(`${SCRIPT_URL}?action=getStructure`);
-                if (!response.ok) throw new Error("Gagal memuat struktur");
+                if (!response.ok) throw new Error();
                 formFieldsData = await response.json();
                 renderForm(formFieldsData);
             } catch (error) {
-                console.error("Fetch Error:", error);
-                showError("Gagal terhubung ke database. Pastikan URL Script benar dan sudah di-Deploy sebagai 'Anyone'.");
+                showError("Gagal memuat database. Pastikan koneksi internet stabil.");
             }
         }
 
@@ -193,7 +197,7 @@
                 if (!options.includes("Lainnya")) options.push("Lainnya");
 
                 return `
-                    <select name="${field.name}_select" ${req} class="${baseClass}" onchange="handleOtherOption(this, '${field.name}')">
+                    <select id="sel_${field.name}" ${req} class="${baseClass}" onchange="handleOtherOption(this, '${field.name}')">
                         <option value="">Pilih Opsi...</option>
                         ${options.map(o => `<option value="${o}">${o}</option>`).join('')}
                     </select>
@@ -204,6 +208,13 @@
                 `;
             } else if (field.type === "textarea") {
                 return `<textarea name="${field.name}" ${req} rows="4" class="${baseClass}" placeholder="Ketik di sini..."></textarea>`;
+            } else if (field.type === "checkbox") {
+                return `
+                    <div class="flex items-center gap-3 p-1">
+                        <input type="checkbox" name="${field.name}" ${req} class="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                        <span class="text-sm text-slate-600">Saya setuju dengan ketentuan yang berlaku</span>
+                    </div>
+                `;
             }
             return `<input type="${field.type}" name="${field.name}" ${req} class="${baseClass}" placeholder="Masukkan ${field.label}">`;
         }
@@ -216,7 +227,7 @@
             if (selectElement.value === "Lainnya") {
                 otherContainer.style.display = 'block';
                 otherInput.required = true;
-                finalInput.value = otherInput.value;
+                finalInput.value = ""; 
             } else {
                 otherContainer.style.display = 'none';
                 otherInput.required = false;
@@ -231,6 +242,15 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        function showSuccess() {
+            document.getElementById('dynamicForm').classList.add('hidden');
+            document.getElementById('successMsg').classList.remove('hidden');
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('btnLoader').classList.add('hidden');
+            document.getElementById('btnText').innerText = "KIRIM SEKARANG";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         document.getElementById('dynamicForm').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
@@ -239,24 +259,18 @@
             
             document.getElementById('errorMessage').classList.add('hidden');
             
-            // Sync data dropdown
+            // Sync data dropdown sebelum kirim
             formFieldsData.forEach(field => {
                 if (field.type === 'dropdown') {
-                    const select = e.target.querySelector(`[name="${field.name}_select"]`);
+                    const select = document.getElementById(`sel_${field.name}`);
                     const final = document.getElementById(`final_${field.name}`);
-                    if (select && select.value === "Lainnya") {
-                        final.value = document.getElementById(`input_${field.name}`).value;
-                    } else if (select) {
+                    const otherInput = document.getElementById(`input_${field.name}`);
+                    
+                    if (select.value === "Lainnya") {
+                        final.value = otherInput.value;
+                    } else {
                         final.value = select.value;
                     }
-                }
-            });
-
-            const formData = new FormData(e.target);
-            const data = {};
-            formData.forEach((value, key) => {
-                if (!key.endsWith('_select') && !key.startsWith('input_')) {
-                    data[key] = value;
                 }
             });
 
@@ -264,48 +278,46 @@
             btnLoader.classList.remove('hidden');
             btnText.innerText = "SEDANG MENGIRIM...";
 
+            const formData = new FormData(e.target);
+            const data = {};
+            formData.forEach((value, key) => { data[key] = value; });
+
             try {
-                // 1. Validasi Server (NIK/NISN)
-                const criticalFields = ['nama', 'nisn', 'nik', 'email'];
+                // Proses Validasi (NIK/NISN)
+                const criticalFields = ['nama', 'nisn', 'nik'];
                 for (const field of criticalFields) {
                     if (data[field]) {
-                        try {
-                            const checkRes = await fetch(`${SCRIPT_URL}?action=validate&field=${field}&value=${encodeURIComponent(data[field])}`);
-                            const checkResult = await checkRes.json();
-                            if (!checkResult.isValid) {
-                                throw new Error(checkResult.message);
-                            }
-                        } catch (e) {
-                            if (e.message.includes("Unexpected token")) continue; 
-                            throw e;
+                        const checkRes = await fetch(`${SCRIPT_URL}?action=validate&field=${field}&value=${encodeURIComponent(data[field])}`);
+                        const checkResult = await checkRes.json();
+                        if (!checkResult.isValid) {
+                            throw new Error(checkResult.message);
                         }
                     }
                 }
 
-                // 2. Submit Data menggunakan no-cors
+                // Kirim menggunakan POST fetch (mode no-cors)
+                submitted = true;
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', 
+                    mode: 'no-cors',
                     cache: 'no-cache',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
-                
-                document.getElementById('dynamicForm').classList.add('hidden');
-                document.getElementById('successMsg').classList.remove('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                // Jika fetch berhasil sampai sini (walaupun no-cors tidak bisa baca body), 
+                // kita anggap sukses karena no-cors tetap mengirimkan request.
+                showSuccess();
 
             } catch (error) {
-                console.error("Submission Error:", error);
-                showError(error.message || "Terjadi kesalahan saat mengirim data. Silakan coba beberapa saat lagi.");
-            } finally {
                 btn.disabled = false;
                 btnLoader.classList.add('hidden');
                 btnText.innerText = "KIRIM SEKARANG";
+                showError(error.message || "Gagal mengirim data. Silakan coba lagi.");
             }
         };
 
         function resetForm() {
+            submitted = false;
             document.getElementById('dynamicForm').reset();
             document.querySelectorAll('.other-input-container').forEach(c => c.style.display = 'none');
             document.getElementById('dynamicForm').classList.remove('hidden');
