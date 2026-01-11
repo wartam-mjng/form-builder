@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Pendaftaran</title>
+    <title>Form Biodata</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -11,33 +11,43 @@
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f8fafc;
-            background-image: radial-gradient(#cbd5e1 0.5px, transparent 0.5px);
-            background-size: 24px 24px;
+            background-color: #f1f5f9;
             min-height: 100vh;
         }
 
+        .app-header {
+            background-color: #ffffff;
+            border-bottom: 4px solid #4f46e5;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-banner {
+            background: linear-gradient(rgba(79, 70, 229, 0.9), rgba(79, 70, 229, 0.8)), 
+                        url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1000');
+            background-size: cover;
+            background-position: center;
+        }
+
         .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 1.5rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            background: rgba(255, 255, 255, 1);
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         .form-input {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1.5px solid #e2e8f0;
+            transition: all 0.2s ease;
+            border: 1.5px solid #cbd5e1;
+            background-color: #ffffff;
         }
 
         .form-input:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
             outline: none;
         }
 
         .loader {
-            border-top-color: #6366f1;
+            border-top-color: #ffffff;
             animation: spinner 0.8s linear infinite;
         }
 
@@ -54,73 +64,92 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        .other-input-container {
+            display: none;
+            margin-top: 0.75rem;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body class="p-4 md:p-12">
+<body class="pb-20">
 
-    <div class="max-w-2xl mx-auto">
-        <div class="text-center mb-10">
-            <div class="inline-flex items-center justify-center p-3 bg-indigo-100 text-indigo-600 rounded-2xl mb-4">
-                <i class="fas fa-file-signature text-2xl"></i>
-            </div>
-            <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Formulir Digital</h1>
-            <p class="text-slate-500 font-medium">Silakan isi data Anda dengan benar</p>
+    <header class="app-header bg-white py-4 px-6 md:px-12 flex items-center gap-4">
+        <div class="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-lg">
+            <i class="fas fa-university text-2xl"></i>
         </div>
+        <div>
+            <h1 class="text-xl font-extrabold text-slate-800 leading-tight uppercase tracking-tight">Nama Instansi Anda</h1>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Sistem Informasi Pendaftaran Online</p>
+        </div>
+    </header>
 
-        <div id="formContainer" class="glass-card p-8 md:p-10 fade-in relative">
-            
-            <!-- Loading State -->
-            <div id="loadingState" class="flex flex-col items-center py-16">
-                <div class="loader ease-linear rounded-full border-4 border-t-4 border-slate-100 h-14 w-14 mb-6"></div>
-                <p class="text-slate-500 font-medium">Menyiapkan formulir...</p>
+    <div class="header-banner h-48 w-full flex items-center justify-center text-white">
+        <div class="text-center px-4">
+            <h2 class="text-2xl md:text-3xl font-bold mb-2">Formulir Layanan Digital</h2>
+            <p class="text-indigo-100 text-sm md:text-base max-w-lg mx-auto">Pastikan data yang Anda masukkan sudah sesuai dengan dokumen asli yang dimiliki.</p>
+        </div>
+    </div>
+
+    <div class="max-w-3xl mx-auto -mt-12 px-4">
+        <div id="formContainer" class="glass-card p-6 md:p-10 fade-in">
+            <div id="loadingState" class="flex flex-col items-center py-12">
+                <div class="loader ease-linear rounded-full border-4 border-t-4 border-indigo-600 h-10 w-10 mb-4"></div>
+                <p class="text-slate-500 text-sm font-bold tracking-widest uppercase">Memuat Data...</p>
             </div>
 
-            <!-- Formulir Dinamis -->
-            <form id="dynamicForm" class="space-y-6 hidden">
-                <div id="formFields" class="space-y-6"></div>
+            <form id="dynamicForm" class="hidden">
+                <div class="flex items-center gap-3 mb-8 pb-4 border-b border-slate-100">
+                    <div class="w-2 h-8 bg-indigo-600 rounded-full"></div>
+                    <h3 class="text-lg font-bold text-slate-800">Isi Formulir Di Bawah Ini</h3>
+                </div>
+
+                <div id="formFields" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 
-                <!-- Pesan Error -->
-                <div id="errorMessage" class="hidden p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-medium flex items-center">
-                    <i class="fas fa-exclamation-circle mr-3"></i>
+                <div id="errorMessage" class="hidden mt-8 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg text-sm font-medium flex items-center shadow-sm">
+                    <i class="fas fa-exclamation-triangle mr-3"></i>
                     <span id="errText"></span>
                 </div>
 
-                <div class="pt-6">
+                <div class="mt-10 flex flex-col items-center">
                     <button type="submit" id="submitBtn" 
-                            class="w-full bg-indigo-600 text-white font-bold py-4 px-8 rounded-2xl hover:bg-indigo-700 transition flex justify-center items-center shadow-xl shadow-indigo-100">
-                        <span id="btnText">Kirim Data</span>
+                            class="w-full md:w-auto min-w-[200px] bg-indigo-600 text-white font-bold py-4 px-10 rounded-xl hover:bg-indigo-700 transition-all flex justify-center items-center shadow-lg">
+                        <span id="btnText">KIRIM SEKARANG</span>
                         <div id="btnLoader" class="loader ease-linear rounded-full border-2 border-t-2 border-white h-5 w-5 ml-3 hidden"></div>
                     </button>
+                    <p class="mt-4 text-[10px] text-slate-400 font-bold uppercase tracking-widest">Keamanan data Anda terjaga secara otomatis</p>
                 </div>
             </form>
 
-            <!-- Success State -->
-            <div id="successMsg" class="hidden text-center py-12 fade-in">
-                <div class="bg-emerald-50 text-emerald-500 p-6 rounded-3xl w-24 h-24 flex items-center justify-center mx-auto mb-6">
-                    <i class="fas fa-check-circle text-5xl"></i>
+            <div id="successMsg" class="hidden text-center py-10 fade-in">
+                <div class="text-indigo-600 mb-6">
+                    <i class="fas fa-check-circle text-7xl"></i>
                 </div>
-                <h3 class="text-2xl font-extrabold text-slate-900 mb-2">Terima Kasih!</h3>
-                <p class="text-slate-500 px-4">Data Anda telah berhasil divalidasi dan disimpan.</p>
-                <button onclick="resetForm()" class="mt-8 px-8 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition">
-                    Kirim Form Lain
+                <h3 class="text-2xl font-bold text-slate-900 mb-2">Data Berhasil Dikirim!</h3>
+                <p class="text-slate-500 mb-8">Terima kasih, informasi Anda telah kami terima dengan sukses.</p>
+                <button onclick="resetForm()" class="bg-slate-100 text-slate-700 px-8 py-3 rounded-xl font-bold hover:bg-slate-200 transition">
+                    Kembali ke Beranda
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        /** * KONFIGURASI UTAMA
-         * Ganti URL di bawah ini dengan URL Web App Google Apps Script Anda
-         */
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOZkzjWh1BUIsy7IvGTavkL1eVsqMctTfFccdoQv1YxhrmqPfdvN0uuJxOG5kKl9GD0A/exec"; 
+        // GANTI INI DENGAN URL /exec DARI GOOGLE APPS SCRIPT ANDA
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyG6G4GqjywetW8z1Q5FIfAn5B1gGy6XG-SlWM-tGNJx59iLLgJqvYybXrW7hBw5ShS5Q/exec"; 
         
         let formFieldsData = [];
 
         window.onload = () => {
-            if (SCRIPT_URL.includes("exec")) {
+            if (SCRIPT_URL && SCRIPT_URL.includes("exec")) {
                 loadFormStructure();
             } else {
-                showError("Konfigurasi SCRIPT_URL belum diset dengan benar.");
+                showError("URL Script belum dikonfigurasi. Masukkan URL /exec Anda di dalam kode.");
                 document.getElementById('loadingState').classList.add('hidden');
             }
         };
@@ -128,12 +157,12 @@
         async function loadFormStructure() {
             try {
                 const response = await fetch(`${SCRIPT_URL}?action=getStructure`);
-                if (!response.ok) throw new Error("Network response was not ok");
+                if (!response.ok) throw new Error("Gagal memuat struktur");
                 formFieldsData = await response.json();
                 renderForm(formFieldsData);
             } catch (error) {
-                console.error(error);
-                showError("Gagal mengambil struktur form dari database.");
+                console.error("Fetch Error:", error);
+                showError("Gagal terhubung ke database. Pastikan URL Script benar dan sudah di-Deploy sebagai 'Anyone'.");
             }
         }
 
@@ -142,9 +171,11 @@
             container.innerHTML = "";
             fields.forEach(field => {
                 const isRequired = field.required === true || field.required === "TRUE";
+                const isWide = field.type === "textarea";
+                
                 const wrapper = `
-                    <div class="fade-in">
-                        <label class="block text-sm font-bold text-slate-700 mb-2">${field.label}${isRequired ? ' <span class="text-rose-500">*</span>' : ''}</label>
+                    <div class="${isWide ? 'md:col-span-2' : ''} fade-in">
+                        <label class="block text-xs font-extrabold text-slate-600 uppercase tracking-wider mb-2">${field.label}${isRequired ? ' <span class="text-red-500">*</span>' : ''}</label>
                         ${renderInput(field, isRequired)}
                     </div>`;
                 container.insertAdjacentHTML('beforeend', wrapper);
@@ -154,20 +185,50 @@
         }
 
         function renderInput(field, isRequired) {
-            const baseClass = "w-full p-4 rounded-xl form-input bg-white text-slate-700 text-sm";
+            const baseClass = "w-full p-3.5 rounded-xl form-input text-slate-700 text-sm font-medium";
             const req = isRequired ? 'required' : '';
+            
             if (field.type === "dropdown") {
-                return `<select name="${field.name}" ${req} class="${baseClass}"><option value="">Pilih...</option>${field.options.map(o => `<option value="${o}">${o}</option>`).join('')}</select>`;
+                let options = field.options || [];
+                if (!options.includes("Lainnya")) options.push("Lainnya");
+
+                return `
+                    <select name="${field.name}_select" ${req} class="${baseClass}" onchange="handleOtherOption(this, '${field.name}')">
+                        <option value="">Pilih Opsi...</option>
+                        ${options.map(o => `<option value="${o}">${o}</option>`).join('')}
+                    </select>
+                    <div id="other_${field.name}" class="other-input-container">
+                        <input type="text" id="input_${field.name}" placeholder="Ketik manual di sini..." class="${baseClass} border-indigo-200 mt-2">
+                    </div>
+                    <input type="hidden" name="${field.name}" id="final_${field.name}">
+                `;
             } else if (field.type === "textarea") {
-                return `<textarea name="${field.name}" ${req} rows="3" class="${baseClass}" placeholder="Ketik di sini..."></textarea>`;
+                return `<textarea name="${field.name}" ${req} rows="4" class="${baseClass}" placeholder="Ketik di sini..."></textarea>`;
             }
-            return `<input type="${field.type}" name="${field.name}" ${req} class="${baseClass}" placeholder="${field.label}">`;
+            return `<input type="${field.type}" name="${field.name}" ${req} class="${baseClass}" placeholder="Masukkan ${field.label}">`;
+        }
+
+        function handleOtherOption(selectElement, fieldName) {
+            const otherContainer = document.getElementById(`other_${fieldName}`);
+            const otherInput = document.getElementById(`input_${fieldName}`);
+            const finalInput = document.getElementById(`final_${fieldName}`);
+
+            if (selectElement.value === "Lainnya") {
+                otherContainer.style.display = 'block';
+                otherInput.required = true;
+                finalInput.value = otherInput.value;
+            } else {
+                otherContainer.style.display = 'none';
+                otherInput.required = false;
+                finalInput.value = selectElement.value;
+            }
         }
 
         function showError(msg) {
             const errDiv = document.getElementById('errorMessage');
             document.getElementById('errText').innerText = msg;
             errDiv.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         document.getElementById('dynamicForm').onsubmit = async (e) => {
@@ -175,67 +236,79 @@
             const btn = document.getElementById('submitBtn');
             const btnLoader = document.getElementById('btnLoader');
             const btnText = document.getElementById('btnText');
-            const errDiv = document.getElementById('errorMessage');
             
-            errDiv.classList.add('hidden');
+            document.getElementById('errorMessage').classList.add('hidden');
+            
+            // Sync data dropdown
+            formFieldsData.forEach(field => {
+                if (field.type === 'dropdown') {
+                    const select = e.target.querySelector(`[name="${field.name}_select"]`);
+                    const final = document.getElementById(`final_${field.name}`);
+                    if (select.value === "Lainnya") {
+                        final.value = document.getElementById(`input_${field.name}`).value;
+                    } else {
+                        final.value = select.value;
+                    }
+                }
+            });
+
             const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData.entries());
+            const data = {};
+            formData.forEach((value, key) => {
+                if (!key.endsWith('_select') && !key.startsWith('input_')) {
+                    data[key] = value;
+                }
+            });
 
-            // --- VALIDASI CLIENT SIDE ---
-            if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-                return showError("Format email tidak valid!");
-            }
-
-            const phoneKey = Object.keys(data).find(k => k.toLowerCase().includes('hp') || k.toLowerCase().includes('telp'));
-            if (phoneKey && data[phoneKey]) {
-                const val = data[phoneKey];
-                if (!/^[0-9]+$/.test(val)) return showError("Nomor HP harus berupa angka!");
-                if (!val.startsWith('62') && !val.startsWith('08')) return showError("Nomor HP harus dimulai dengan 62 atau 08!");
-            }
-
-            // --- PROSES SUBMIT ---
             btn.disabled = true;
             btnLoader.classList.remove('hidden');
-            btnText.innerText = "Memverifikasi...";
+            btnText.innerText = "SEDANG MENGIRIM...";
 
             try {
-                // 1. Validasi ke Server (Cek Duplikat/NIK/NISN)
-                // Kita cek field kritis yang ada di input data
+                // 1. Validasi Server (NIK/NISN)
                 const criticalFields = ['nama', 'nisn', 'nik', 'email'];
                 for (const field of criticalFields) {
                     if (data[field]) {
-                        const checkRes = await fetch(`${SCRIPT_URL}?action=validate&field=${field}&value=${encodeURIComponent(data[field])}`);
-                        const checkResult = await checkRes.json();
-                        if (!checkResult.isValid) {
-                            btn.disabled = false;
-                            btnLoader.classList.add('hidden');
-                            btnText.innerText = "Kirim Data";
-                            return showError(checkResult.message);
+                        try {
+                            const checkRes = await fetch(`${SCRIPT_URL}?action=validate&field=${field}&value=${encodeURIComponent(data[field])}`);
+                            const checkResult = await checkRes.json();
+                            if (!checkResult.isValid) {
+                                throw new Error(checkResult.message);
+                            }
+                        } catch (e) {
+                            if (e.message.includes("Unexpected token")) continue; // Abaikan jika bukan JSON
+                            throw e;
                         }
                     }
                 }
 
-                // 2. Kirim Data Jika Valid
+                // 2. Submit Data menggunakan no-cors
                 await fetch(SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
+                    mode: 'no-cors', 
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
                 
+                // Pada no-cors, kita tidak bisa baca respon, jadi kita asumsikan sukses jika tidak ada error jaringan
                 document.getElementById('dynamicForm').classList.add('hidden');
                 document.getElementById('successMsg').classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
             } catch (error) {
-                console.error(error);
-                showError("Terjadi gangguan koneksi. Silakan coba lagi.");
+                console.error("Submission Error:", error);
+                showError(error.message || "Terjadi kesalahan saat mengirim data. Silakan coba beberapa saat lagi.");
             } finally {
                 btn.disabled = false;
                 btnLoader.classList.add('hidden');
-                btnText.innerText = "Kirim Data";
+                btnText.innerText = "KIRIM SEKARANG";
             }
         };
 
         function resetForm() {
             document.getElementById('dynamicForm').reset();
+            document.querySelectorAll('.other-input-container').forEach(c => c.style.display = 'none');
             document.getElementById('dynamicForm').classList.remove('hidden');
             document.getElementById('successMsg').classList.add('hidden');
         }
