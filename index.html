@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Biodata</title>
+    <title>Form Biodata - SMP NEGERI 4 MAJENANG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -23,7 +23,7 @@
 
         .header-banner {
             background: linear-gradient(rgba(79, 70, 229, 0.9), rgba(79, 70, 229, 0.8)), 
-                        url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1000');
+                        url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=1000');
             background-size: cover;
             background-position: center;
         }
@@ -84,15 +84,15 @@
             <i class="fas fa-university text-2xl"></i>
         </div>
         <div>
-            <h1 class="text-xl font-extrabold text-slate-800 leading-tight uppercase tracking-tight">Nama Instansi Anda</h1>
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Sistem Informasi Pendaftaran Online</p>
+            <h1 class="text-xl font-extrabold text-slate-800 leading-tight uppercase tracking-tight">SMP NEGERI 4 MAJENANG</h1>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Sistem Informasi Online</p>
         </div>
     </header>
 
     <div class="header-banner h-48 w-full flex items-center justify-center text-white">
         <div class="text-center px-4">
             <h2 class="text-2xl md:text-3xl font-bold mb-2">Formulir Layanan Digital</h2>
-            <p class="text-indigo-100 text-sm md:text-base max-w-lg mx-auto">Pastikan data yang Anda masukkan sudah sesuai dengan dokumen asli yang dimiliki.</p>
+            <p class="text-indigo-100 text-sm md:text-base max-w-lg mx-auto">Pastikan data yang Anda masukkan sudah sesuai fakta yang ada</p>
         </div>
     </div>
 
@@ -141,7 +141,7 @@
 
     <script>
         // GANTI INI DENGAN URL /exec DARI GOOGLE APPS SCRIPT ANDA
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyG6G4GqjywetW8z1Q5FIfAn5B1gGy6XG-SlWM-tGNJx59iLLgJqvYybXrW7hBw5ShS5Q/exec"; 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOZkzjWh1BUIsy7IvGTavkL1eVsqMctTfFccdoQv1YxhrmqPfdvN0uuJxOG5kKl9GD0A/exec"; 
         
         let formFieldsData = [];
 
@@ -244,9 +244,9 @@
                 if (field.type === 'dropdown') {
                     const select = e.target.querySelector(`[name="${field.name}_select"]`);
                     const final = document.getElementById(`final_${field.name}`);
-                    if (select.value === "Lainnya") {
+                    if (select && select.value === "Lainnya") {
                         final.value = document.getElementById(`input_${field.name}`).value;
-                    } else {
+                    } else if (select) {
                         final.value = select.value;
                     }
                 }
@@ -276,7 +276,7 @@
                                 throw new Error(checkResult.message);
                             }
                         } catch (e) {
-                            if (e.message.includes("Unexpected token")) continue; // Abaikan jika bukan JSON
+                            if (e.message.includes("Unexpected token")) continue; 
                             throw e;
                         }
                     }
@@ -291,7 +291,6 @@
                     body: JSON.stringify(data)
                 });
                 
-                // Pada no-cors, kita tidak bisa baca respon, jadi kita asumsikan sukses jika tidak ada error jaringan
                 document.getElementById('dynamicForm').classList.add('hidden');
                 document.getElementById('successMsg').classList.remove('hidden');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
