@@ -1,328 +1,375 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Biodata - SMP NEGERI 4 MAJENANG</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f1f5f9;
-            min-height: 100vh;
-        }
-
-        .app-header {
-            background-color: #ffffff;
-            border-bottom: 4px solid #4f46e5;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-banner {
-            background: linear-gradient(rgba(79, 70, 229, 0.9), rgba(79, 70, 229, 0.8)), 
-                        url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=1000');
-            background-size: cover;
-            background-position: center;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 1);
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-input {
-            transition: all 0.2s ease;
-            border: 1.5px solid #cbd5e1;
-            background-color: #ffffff;
-        }
-
-        .form-input:focus {
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-            outline: none;
-        }
-
-        .loader {
-            border-top-color: #ffffff;
-            animation: spinner 0.8s linear infinite;
-        }
-
-        @keyframes spinner {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .other-input-container {
-            display: none;
-            margin-top: 0.75rem;
-            animation: slideDown 0.3s ease-out;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Form</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f5f6f8;
+    margin: 0;
+    padding: 24px 12px;
+  }
+  .card {
+    max-width: 560px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    padding: 28px 24px;
+  }
+  h1 { font-size: 20px; margin: 0 0 6px; color: #1a1a1a; text-align: center; }
+  .form-header {
+    background: linear-gradient(135deg, #4a6cf7, #1e3fc4);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .form-header h1 { color: #fff; }
+  .form-header p.desc { color: #e6ebff; text-align: center; margin: 0; }
+  .header-image {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  p.desc { color: #555; margin: 0 0 20px; font-size: 14px; }
+  label {
+    display: block; font-size: 14px; font-weight: 700;
+    margin-bottom: 6px; margin-top: 16px; color: #2851e3;
+  }
+  input[type="text"], input[type="date"], input[type="number"], select, input[type="file"], textarea {
+    width: 100%; box-sizing: border-box; padding: 9px 10px;
+    border: 1px solid #ccc; border-radius: 6px; font-size: 14px;
+  }
+  textarea {
+    resize: vertical;
+    min-height: 90px;
+    font-family: inherit;
+  }
+  .checkbox-group, .scale-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+  }
+  .checkbox-item input { width: auto; }
+  .scale-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: #444;
+  }
+  .scale-item input { width: auto; }
+  .required-mark { color: #d33; margin-left: 3px; }
+  button {
+    margin-top: 24px; width: 100%; padding: 11px;
+    background: #4a6cf7; color: #fff; border: none;
+    border-radius: 6px; font-size: 15px; cursor: pointer;
+  }
+  button:disabled { background: #9aa8f0; cursor: not-allowed; }
+  #msg { margin-top: 16px; font-size: 14px; text-align: center; }
+  #msg.success { color: #1a7f37; }
+  #msg.error { color: #d33; }
+  .loading { text-align: center; color: #888; padding: 40px 0; }
+  .setup-box input[type="text"] {
+    width: 100%; box-sizing: border-box; padding: 9px 10px;
+    border: 1px solid #ccc; border-radius: 6px; font-size: 14px;
+    margin-top: 6px; margin-bottom: 4px;
+  }
+  .setup-box p.hint { font-size: 12px; color: #777; margin: 4px 0 0; }
+  .footer-link {
+    text-align: center; margin-top: 18px;
+  }
+  .footer-link a {
+    font-size: 12px; color: #999; text-decoration: underline; cursor: pointer;
+  }
+</style>
 </head>
-<body class="pb-20">
+<body>
 
-    <header class="app-header bg-white py-4 px-6 md:px-12 flex items-center gap-4">
-        <div class="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-lg">
-            <i class="fas fa-university text-2xl"></i>
-        </div>
-        <div>
-            <h1 class="text-xl font-extrabold text-slate-800 leading-tight uppercase tracking-tight">SMP NEGERI 4 MAJENANG</h1>
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Sistem Informasi Online</p>
-        </div>
-    </header>
+<div class="card" id="card">
+  <div class="loading">Memuat form...</div>
+</div>
 
-    <div class="header-banner h-48 w-full flex items-center justify-center text-white">
-        <div class="text-center px-4">
-            <h2 class="text-2xl md:text-3xl font-bold mb-2">Formulir Layanan Digital</h2>
-            <p class="text-indigo-100 text-sm md:text-base max-w-lg mx-auto">Pastikan data yang Anda masukkan sudah sesuai fakta yang ada</p>
-        </div>
-    </div>
+<script>
+  let currentFields = [];
+  let dataBerjenjang = {};
+  let API_URL = getStoredApiUrl();
 
-    <div class="max-w-3xl mx-auto -mt-12 px-4">
-        <div id="formContainer" class="glass-card p-6 md:p-10 fade-in">
-            <div id="loadingState" class="flex flex-col items-center py-12">
-                <div class="loader ease-linear rounded-full border-4 border-t-4 border-indigo-600 h-10 w-10 mb-4"></div>
-                <p class="text-slate-500 text-sm font-bold tracking-widest uppercase">Memuat Data...</p>
-            </div>
+  if (API_URL) {
+    loadForm();
+  } else {
+    showSetupScreen();
+  }
 
-            <!-- Form Utama -->
-            <form id="dynamicForm" class="hidden">
-                <div class="flex items-center gap-3 mb-8 pb-4 border-b border-slate-100">
-                    <div class="w-2 h-8 bg-indigo-600 rounded-full"></div>
-                    <h3 class="text-lg font-bold text-slate-800">Isi Formulir Di Bawah Ini</h3>
-                </div>
+  function getStoredApiUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl = params.get('api');
+    if (fromUrl) {
+      localStorage.setItem('formApiUrl', fromUrl);
+      return fromUrl;
+    }
+    return localStorage.getItem('formApiUrl') || '';
+  }
 
-                <div id="formFields" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-                
-                <div id="errorMessage" class="hidden mt-8 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg text-sm font-medium flex items-center shadow-sm">
-                    <i class="fas fa-exclamation-triangle mr-3"></i>
-                    <span id="errText"></span>
-                </div>
+  function showSetupScreen() {
+    document.getElementById('card').innerHTML =
+      '<div class="setup-box">' +
+      '<h1 style="text-align:left;">Pengaturan Awal</h1>' +
+      '<p class="desc">Tempel URL Web App Apps Script (berakhiran <code>/exec</code>) untuk menghubungkan form ini ke Google Sheet & Drive.</p>' +
+      '<input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/xxxx/exec">' +
+      '<p class="hint">URL ini didapat dari Deploy &gt; Web app di Apps Script.</p>' +
+      '<button id="saveApiUrlBtn">Simpan &amp; Lanjutkan</button>' +
+      '<div id="setupMsg" style="margin-top:10px;font-size:13px;"></div>' +
+      '</div>';
 
-                <div class="mt-10 flex flex-col items-center">
-                    <button type="submit" id="submitBtn" 
-                            class="w-full md:w-auto min-w-[200px] bg-indigo-600 text-white font-bold py-4 px-10 rounded-xl hover:bg-indigo-700 transition-all flex justify-center items-center shadow-lg">
-                        <span id="btnText">KIRIM SEKARANG</span>
-                        <div id="btnLoader" class="loader ease-linear rounded-full border-2 border-t-2 border-white h-5 w-5 ml-3 hidden"></div>
-                    </button>
-                    <p class="mt-4 text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center">Keamanan data Anda terjaga secara otomatis</p>
-                </div>
-            </form>
+    document.getElementById('saveApiUrlBtn').addEventListener('click', function () {
+      const val = document.getElementById('apiUrlInput').value.trim();
+      const msg = document.getElementById('setupMsg');
+      if (!val || val.indexOf('/exec') === -1) {
+        msg.style.color = '#d33';
+        msg.textContent = 'URL sepertinya belum benar. Pastikan URL berakhiran /exec.';
+        return;
+      }
+      API_URL = val;
+      localStorage.setItem('formApiUrl', val);
 
-            <div id="successMsg" class="hidden text-center py-10 fade-in">
-                <div class="text-indigo-600 mb-6">
-                    <i class="fas fa-check-circle text-7xl"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-slate-900 mb-2">Data Berhasil Dikirim!</h3>
-                <p class="text-slate-500 mb-8">Terima kasih, informasi Anda telah kami terima dengan sukses.</p>
-                <button onclick="resetForm()" class="bg-slate-100 text-slate-700 px-8 py-3 rounded-xl font-bold hover:bg-slate-200 transition">
-                    Kembali ke Beranda
-                </button>
-            </div>
-        </div>
-    </div>
+      // Simpan juga di URL halaman supaya link yang dibagikan sudah otomatis terhubung
+      const newUrl = window.location.pathname + '?api=' + encodeURIComponent(val);
+      window.history.replaceState({}, '', newUrl);
 
-    <!-- Iframe tersembunyi untuk proses submit tanpa CORS error -->
-    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) { showSuccess(); }"></iframe>
+      loadForm();
+    });
+  }
 
-    <script>
-        // URL SCRIPT TERUPDATE ANDA
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbygaraLc4E3PVs61WgrwXEDoHJ10gYOQ1RIyVUZPCFRsVuKCX2ihmIzNTjsdeJxpT3ZZA/exec"; 
-        
-        let formFieldsData = [];
-        let submitted = false;
+  function loadForm() {
+    document.getElementById('card').innerHTML = '<div class="loading">Memuat form...</div>';
+    fetch(API_URL + '?action=getConfig')
+      .then(function (res) { return res.json(); })
+      .then(renderForm)
+      .catch(function (err) {
+        document.getElementById('card').innerHTML =
+          '<p style="color:#d33;">Gagal memuat form: ' + err.message + '</p>' +
+          '<div class="footer-link"><a id="resetLink">Ubah URL API</a></div>';
+        document.getElementById('resetLink').addEventListener('click', resetApiUrl);
+      });
+  }
 
-        window.onload = () => {
-            if (SCRIPT_URL && SCRIPT_URL.includes("exec")) {
-                loadFormStructure();
-            } else {
-                showError("URL Script belum dikonfigurasi.");
-                document.getElementById('loadingState').classList.add('hidden');
-            }
+  function resetApiUrl() {
+    localStorage.removeItem('formApiUrl');
+    window.history.replaceState({}, '', window.location.pathname);
+    showSetupScreen();
+  }
+
+  function renderForm(config) {
+    currentFields = config.fields;
+    dataBerjenjang = config.dataBerjenjang || {};
+    let html = '<div class="form-header">';
+    if (config.gambarHeader) {
+      html += '<img class="header-image" src="' + escapeHtml(config.gambarHeader) + '" alt="Header">';
+    }
+    html += '<h1>' + escapeHtml(config.judul) + '</h1>';
+    html += '<p class="desc">' + escapeHtml(config.deskripsi) + '</p>';
+    html += '</div>';
+    html += '<form id="dynamicForm">';
+
+    config.fields.forEach(function (field, idx) {
+      const req = field.wajib ? '<span class="required-mark">*</span>' : '';
+      html += '<label>' + escapeHtml(field.nama) + req + '</label>';
+
+      if (field.tipe === 'Pilihan') {
+        html += '<select name="field_' + idx + '" ' + (field.wajib ? 'required' : '') + '>';
+        html += '<option value="">-- Pilih --</option>';
+        field.opsi.forEach(function (opt) {
+          html += '<option value="' + escapeHtml(opt) + '">' + escapeHtml(opt) + '</option>';
+        });
+        html += '</select>';
+      } else if (field.tipe === 'Pilihan Berjenjang') {
+        // Awalnya kosong/disabled, menunggu field induk dipilih
+        html += '<select name="field_' + idx + '" data-bergantung="' + escapeHtml(field.bergantungPada) + '" disabled ' + (field.wajib ? 'required' : '') + '>';
+        html += '<option value="">-- Pilih ' + escapeHtml(field.bergantungPada) + ' dulu --</option>';
+        html += '</select>';
+      } else if (field.tipe === 'Upload File') {
+        html += '<input type="file" name="field_' + idx + '" ' + (field.wajib ? 'required' : '') + '>';
+      } else if (field.tipe === 'Teks Panjang') {
+        html += '<textarea name="field_' + idx + '" rows="5" ' + (field.wajib ? 'required' : '') + '></textarea>';
+      } else if (field.tipe === 'Tanggal') {
+        html += '<input type="date" name="field_' + idx + '" ' + (field.wajib ? 'required' : '') + '>';
+      } else if (field.tipe === 'Angka') {
+        html += '<input type="number" name="field_' + idx + '" ' + (field.wajib ? 'required' : '') + '>';
+      } else if (field.tipe === 'Checkbox (Pilihan Ganda)') {
+        html += '<div class="checkbox-group" data-checkbox-group="field_' + idx + '">';
+        field.opsi.forEach(function (opt, optIdx) {
+          html += '<label class="checkbox-item">';
+          html += '<input type="checkbox" name="field_' + idx + '_opt_' + optIdx + '" value="' + escapeHtml(opt) + '">';
+          html += escapeHtml(opt) + '</label>';
+        });
+        html += '</div>';
+      } else if (field.tipe === 'Skala/Rating') {
+        html += '<div class="scale-group">';
+        field.opsi.forEach(function (opt) {
+          html += '<label class="scale-item">';
+          html += '<input type="radio" name="field_' + idx + '" value="' + escapeHtml(opt) + '" ' + (field.wajib ? 'required' : '') + '>';
+          html += escapeHtml(opt) + '</label>';
+        });
+        html += '</div>';
+      } else {
+        html += '<input type="text" name="field_' + idx + '" ' + (field.wajib ? 'required' : '') + '>';
+      }
+    });
+
+    html += '<button type="submit" id="submitBtn">Kirim</button>';
+    html += '<div id="msg"></div>';
+    html += '</form>';
+    html += '<div class="footer-link"><a id="resetLink">Ubah URL API</a></div>';
+
+    document.getElementById('card').innerHTML = html;
+    document.getElementById('dynamicForm').addEventListener('submit', handleSubmit);
+    document.getElementById('resetLink').addEventListener('click', resetApiUrl);
+    attachCascadingListeners();
+  }
+
+  // Hubungkan setiap field "Pilihan Berjenjang" ke field induknya
+  function attachCascadingListeners() {
+    const form = document.getElementById('dynamicForm');
+
+    currentFields.forEach(function (field, idx) {
+      if (field.tipe !== 'Pilihan Berjenjang') return;
+
+      const childSelect = form.querySelector('[name="field_' + idx + '"]');
+      const parentIdx = currentFields.findIndex(function (f) { return f.nama === field.bergantungPada; });
+      if (parentIdx === -1) return;
+
+      const parentEl = form.querySelector('[name="field_' + parentIdx + '"]');
+      if (!parentEl) return;
+
+      parentEl.addEventListener('change', function () {
+        const key = field.bergantungPada + '||' + parentEl.value;
+        const options = dataBerjenjang[key] || [];
+        childSelect.innerHTML = '<option value="">-- Pilih ' + escapeHtml(field.nama) + ' --</option>';
+        options.forEach(function (opt) {
+          const optEl = document.createElement('option');
+          optEl.value = opt;
+          optEl.textContent = opt;
+          childSelect.appendChild(optEl);
+        });
+        childSelect.disabled = options.length === 0;
+      });
+    });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const msg = document.getElementById('msg');
+    btn.disabled = true;
+    msg.className = '';
+    msg.textContent = 'Mengirim...';
+
+    const form = e.target;
+    const data = {};
+    const fileFields = currentFields.filter(function (f) { return f.tipe === 'Upload File'; });
+
+    currentFields.forEach(function (field, idx) {
+      if (field.tipe === 'Upload File') return;
+
+      if (field.tipe === 'Checkbox (Pilihan Ganda)') {
+        const checked = form.querySelectorAll('[data-checkbox-group="field_' + idx + '"] input:checked');
+        const values = Array.prototype.map.call(checked, function (el) { return el.value; });
+        data[field.nama] = values.join(', ');
+        return;
+      }
+
+      if (field.tipe === 'Skala/Rating') {
+        const checkedRadio = form.querySelector('[name="field_' + idx + '"]:checked');
+        data[field.nama] = checkedRadio ? checkedRadio.value : '';
+        return;
+      }
+
+      const el = form.querySelector('[name="field_' + idx + '"]');
+      data[field.nama] = el ? el.value : '';
+    });
+
+    if (fileFields.length === 0) {
+      submitToServer(data, {});
+      return;
+    }
+
+    const filePromises = fileFields.map(function (field) {
+      const idx = currentFields.indexOf(field);
+      const el = form.querySelector('[name="field_' + idx + '"]');
+      const file = el && el.files[0];
+      if (!file) return Promise.resolve(null);
+
+      return new Promise(function (resolve) {
+        const reader = new FileReader();
+        reader.onload = function () {
+          resolve({
+            nama: field.nama,
+            base64: reader.result,
+            mimeType: file.type,
+            fileName: file.name
+          });
         };
+        reader.readAsDataURL(file);
+      });
+    });
 
-        async function loadFormStructure() {
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getStructure`);
-                if (!response.ok) throw new Error();
-                formFieldsData = await response.json();
-                renderForm(formFieldsData);
-            } catch (error) {
-                showError("Gagal memuat database. Pastikan koneksi internet stabil.");
-            }
+    Promise.all(filePromises).then(function (results) {
+      const files = {};
+      results.forEach(function (r) {
+        if (r) files[r.nama] = { base64: r.base64, mimeType: r.mimeType, fileName: r.fileName };
+      });
+      submitToServer(data, files);
+    });
+  }
+
+  function submitToServer(data, files) {
+    fetch(API_URL, {
+      method: 'POST',
+      // text/plain WAJIB dipakai agar tidak memicu preflight CORS
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'submit', data: data, files: files })
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (result) {
+        const msg = document.getElementById('msg');
+        if (result.status === 'ok') {
+          msg.className = 'success';
+          msg.textContent = 'Terkirim! Terima kasih.';
+          document.getElementById('dynamicForm').reset();
+        } else {
+          msg.className = 'error';
+          msg.textContent = 'Gagal mengirim: ' + (result.message || 'Terjadi kesalahan.');
         }
+        document.getElementById('submitBtn').disabled = false;
+      })
+      .catch(function (err) {
+        const msg = document.getElementById('msg');
+        msg.className = 'error';
+        msg.textContent = 'Gagal mengirim: ' + err.message;
+        document.getElementById('submitBtn').disabled = false;
+      });
+  }
 
-        function renderForm(fields) {
-            const container = document.getElementById('formFields');
-            container.innerHTML = "";
-            fields.forEach(field => {
-                const isRequired = field.required === true || field.required === "TRUE";
-                const isWide = field.type === "textarea";
-                
-                const wrapper = `
-                    <div class="${isWide ? 'md:col-span-2' : ''} fade-in">
-                        <label class="block text-xs font-extrabold text-slate-600 uppercase tracking-wider mb-2">${field.label}${isRequired ? ' <span class="text-red-500">*</span>' : ''}</label>
-                        ${renderInput(field, isRequired)}
-                    </div>`;
-                container.insertAdjacentHTML('beforeend', wrapper);
-            });
-            document.getElementById('loadingState').classList.add('hidden');
-            document.getElementById('dynamicForm').classList.remove('hidden');
-        }
-
-        function renderInput(field, isRequired) {
-            const baseClass = "w-full p-3.5 rounded-xl form-input text-slate-700 text-sm font-medium";
-            const req = isRequired ? 'required' : '';
-            
-            if (field.type === "dropdown") {
-                let options = field.options || [];
-                if (!options.includes("Lainnya")) options.push("Lainnya");
-
-                return `
-                    <select id="sel_${field.name}" ${req} class="${baseClass}" onchange="handleOtherOption(this, '${field.name}')">
-                        <option value="">Pilih Opsi...</option>
-                        ${options.map(o => `<option value="${o}">${o}</option>`).join('')}
-                    </select>
-                    <div id="other_${field.name}" class="other-input-container">
-                        <input type="text" id="input_${field.name}" placeholder="Ketik manual di sini..." class="${baseClass} border-indigo-200 mt-2">
-                    </div>
-                    <input type="hidden" name="${field.name}" id="final_${field.name}">
-                `;
-            } else if (field.type === "textarea") {
-                return `<textarea name="${field.name}" ${req} rows="4" class="${baseClass}" placeholder="Ketik di sini..."></textarea>`;
-            } else if (field.type === "checkbox") {
-                return `
-                    <div class="flex items-center gap-3 p-1">
-                        <input type="checkbox" name="${field.name}" ${req} class="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
-                        <span class="text-sm text-slate-600">Saya setuju dengan ketentuan yang berlaku</span>
-                    </div>
-                `;
-            }
-            return `<input type="${field.type}" name="${field.name}" ${req} class="${baseClass}" placeholder="Masukkan ${field.label}">`;
-        }
-
-        function handleOtherOption(selectElement, fieldName) {
-            const otherContainer = document.getElementById(`other_${fieldName}`);
-            const otherInput = document.getElementById(`input_${fieldName}`);
-            const finalInput = document.getElementById(`final_${fieldName}`);
-
-            if (selectElement.value === "Lainnya") {
-                otherContainer.style.display = 'block';
-                otherInput.required = true;
-                finalInput.value = ""; 
-            } else {
-                otherContainer.style.display = 'none';
-                otherInput.required = false;
-                finalInput.value = selectElement.value;
-            }
-        }
-
-        function showError(msg) {
-            const errDiv = document.getElementById('errorMessage');
-            document.getElementById('errText').innerText = msg;
-            errDiv.classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function showSuccess() {
-            document.getElementById('dynamicForm').classList.add('hidden');
-            document.getElementById('successMsg').classList.remove('hidden');
-            document.getElementById('submitBtn').disabled = false;
-            document.getElementById('btnLoader').classList.add('hidden');
-            document.getElementById('btnText').innerText = "KIRIM SEKARANG";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        document.getElementById('dynamicForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            const btnLoader = document.getElementById('btnLoader');
-            const btnText = document.getElementById('btnText');
-            
-            document.getElementById('errorMessage').classList.add('hidden');
-            
-            // Sync data dropdown sebelum kirim
-            formFieldsData.forEach(field => {
-                if (field.type === 'dropdown') {
-                    const select = document.getElementById(`sel_${field.name}`);
-                    const final = document.getElementById(`final_${field.name}`);
-                    const otherInput = document.getElementById(`input_${field.name}`);
-                    
-                    if (select.value === "Lainnya") {
-                        final.value = otherInput.value;
-                    } else {
-                        final.value = select.value;
-                    }
-                }
-            });
-
-            btn.disabled = true;
-            btnLoader.classList.remove('hidden');
-            btnText.innerText = "SEDANG MENGIRIM...";
-
-            const formData = new FormData(e.target);
-            const data = {};
-            formData.forEach((value, key) => { data[key] = value; });
-
-            try {
-                // Proses Validasi (NIK/NISN)
-                const criticalFields = ['nama', 'nisn', 'nik'];
-                for (const field of criticalFields) {
-                    if (data[field]) {
-                        const checkRes = await fetch(`${SCRIPT_URL}?action=validate&field=${field}&value=${encodeURIComponent(data[field])}`);
-                        const checkResult = await checkRes.json();
-                        if (!checkResult.isValid) {
-                            throw new Error(checkResult.message);
-                        }
-                    }
-                }
-
-                // Kirim menggunakan POST fetch (mode no-cors)
-                submitted = true;
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    cache: 'no-cache',
-                    body: JSON.stringify(data)
-                });
-
-                // Jika fetch berhasil sampai sini (walaupun no-cors tidak bisa baca body), 
-                // kita anggap sukses karena no-cors tetap mengirimkan request.
-                showSuccess();
-
-            } catch (error) {
-                btn.disabled = false;
-                btnLoader.classList.add('hidden');
-                btnText.innerText = "KIRIM SEKARANG";
-                showError(error.message || "Gagal mengirim data. Silakan coba lagi.");
-            }
-        };
-
-        function resetForm() {
-            submitted = false;
-            document.getElementById('dynamicForm').reset();
-            document.querySelectorAll('.other-input-container').forEach(c => c.style.display = 'none');
-            document.getElementById('dynamicForm').classList.remove('hidden');
-            document.getElementById('successMsg').classList.add('hidden');
-        }
-    </script>
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+</script>
 </body>
 </html>
